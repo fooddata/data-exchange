@@ -1,0 +1,77 @@
+################################################################################################
+# File: fooddata-recipes.ttl
+# Author: Onno Haldar
+# Date: 14-11-2020
+# Status: Food Data Recipes (based on BBC Food Ontology)
+#         - Tested with Fuseki Mini OWL Reasoner
+################################################################################################
+
+
+@base <http://fooddata.eu/data> .
+@prefix : <http://fooddata.eu/data> .
+@prefix fdo: <http://fooddata.eu/ontology/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms#> .
+@prefix vso: <https://schema.org/> .
+
+
+################################################################################################
+# Cuisines (rfds:range -> fdo:Cuisine)
+################################################################################################
+:italien
+    rdfs:label          "Italiaans"@nl ;
+    dcterms:description "Italiaanse keuken."@nl .
+
+################################################################################################
+# Food substances and ingredients (rdfs:range -> fdo:Food)
+################################################################################################
+:lasagna
+    rdfs:label          "Lasagna"@nl ;
+    dcterms:description "Ovengerecht met laagjes pasta en vulling ertussen."@nl .
+
+:nutmeg
+    rdfs:label          "Nootmuskaat"@nl ;
+    dcterms:description "Harde noot om te raspen."@nl .
+
+:smoked_salmon
+    rdfs:label          "Gerookte zalm"@nl ;
+    dcterms:description "Basisvariant gerookte zalm."@nl .
+
+################################################################################################
+# Recipes: fdo:Recipe <- rfds:domain
+################################################################################################
+:rcp1
+    rdfs:label          "Zalm en spinazie lasgagna"@nl ;
+    dcterms:description "Een lasgagna met verse spinazie, gerookte zalm en creme freche."@nl ;
+    # fdo:Recipe <- rdfs:domain = fdo:serves = rdfs:range -> xsd:string
+    fdo:serves   "6"@nl ;
+    # fdo:Recipe <- rdfs:domain = fdo:cuisine = rdfs:range -> fdo:Cuisine
+    fdo:cuisine  :italien ;
+    # fdo:Recipe <- rdfs:domain = fdo:produces = rdfs:range -> fdo:Food
+    fdo:produces :lasagna ;
+    # fdo:Recipe <- rdfs:domain = fdo:stages = rdfs:range -> fdo:StageSequence
+    fdo:stages   :rcp1_stgs .
+:rcp1_stgs
+    # rdfs:range -> fdo:StageSequence
+    rdf:_1 :rcp1_stg1 ;
+    rdf:_2 :rcp1_stg2 .
+:rcp1_stg1 a fdo:Stage ;
+    rdfs:label "Vulling bereiden"@nl ;
+    # fdo:ingredients = rfds:range -> fdo:IngredientList
+    fdo:ingredients :rcp1_stg1_igds .
+:rcp1_stg1_igds
+    # rfds:range -> fdo:IngredientList
+    rdf:_1 :rcp1_stg1_igd1 ;
+    rdf:_2 :rcp1_stg1_igd2 .
+:rcp1_stg1_igd1
+    # fdo:Ingredient <- rdfs:domain = fdo:food = rfds:range -> fdo:Food
+    fdo:food :nutmeg ; 
+    fdo:imperial_quantity "2 el"@nl .
+:rcp1_stg1_igd2
+    # fdo:Ingredient <- rdfs:domain = fdo:food = rfds:range -> fdo:Food
+    fdo:food :smoked_salmon ; 
+    fdo:metric_quantity "240 gr"@nl .
+:rcp1_stg2 a fdo:Stage ;
+    rdfs:label "Lasagna bereiden" .
